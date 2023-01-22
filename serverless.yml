@@ -1,0 +1,24 @@
+service: nestjs-lambda
+
+provider:
+  name: aws
+  runtime: nodejs18.x # You should check available versions before changing this -> https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
+  timeout: 15 # In seconds
+  memorySize: 512 # In MB
+  region: us-east-1 # Region it's going to be deployed
+  versionFunctions: false # If you want to turn off function versioning
+  stage: dev
+
+functions:
+  app:
+    handler: dist/lambda.handler
+    events:
+      - http:
+          method: ANY
+          path: / # To endpoints on the / path
+          cors: true
+      - http:
+          method: ANY
+          path: '{proxy+}' # To endpoints on any path
+          cors: true
+
